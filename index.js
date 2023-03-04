@@ -27,8 +27,8 @@ client.on('messageCreate' , (msg) => {
     {
         return;
     }
-
-        const r = Math.floor(Math.random() * replies.length);
+    
+    const r = Math.floor(Math.random() * replies.length);
         msg.channel.send(replies[r]);
 });
 
