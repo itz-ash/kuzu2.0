@@ -16,12 +16,20 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}🪄🍭🗽!`);
   });
 
+const replies = [
+    'Hello!!',
+    '🗽🍭🪄',
+    'Wassup!'
+]
+
 client.on('messageCreate' , (msg) => {
-    if(!msg.author.bot){
-        for(var i = 0;i < 10;i++){
-            msg.reply(msg.content);
-        }
+    if(msg.author.bot)
+    {
+        return;
     }
+
+        const r = Math.floor(Math.random() * replies.length);
+        msg.channel.send(replies[r]);
 });
 
   
