@@ -15,11 +15,11 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-client.once(Events.ClientReady, () => {
+client.on('Ready', () => {
 	console.log('Ready!');
 });
 
-client.on(Events.InteractionCreate, async interaction => {
+client.on('InteractionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = client.commands.get(interaction.commandName);
