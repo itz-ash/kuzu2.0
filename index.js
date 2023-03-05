@@ -1,4 +1,7 @@
 require('dotenv').config();
+const fs = require('node:fs');
+const path = require('node:path');
+
 const { Client, IntentsBitField } = require('discord.js');
 const client = new Client({
   intents: [
@@ -9,14 +12,37 @@ const client = new Client({
   ],
 });
 
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	client.commands.set(command.data.name, command);
+}
 
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}🪄🍭🗽!`);
-  });
+client.on(Ready, () => {
+	console.log(`logged in as ${client.user.name}`);
+});
 
-const commandHandler = require('./commands');
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
 
-client.on('messageCreate' , commandHandler); 
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+});
 
 client.login(process.env.TOKEN);
