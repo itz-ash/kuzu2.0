@@ -1,8 +1,8 @@
 
 
-// const gif = require('./commands/gif.js');
+const gif = require('./commands/gif.js');
 const kuzu = require('./commands/kuzu.js');
-const commands = { kuzu };
+const commands = { kuzu, gif };
 module.exports = async function (msg){
 
     let tokens = msg.content.split(" ");
@@ -10,11 +10,5 @@ module.exports = async function (msg){
     if (command.charAt(0) === '!'){
         command = command.substring(1);
         commands[command](msg, tokens)
-    }
-
-
-
-    if(msg.content === '!kuzu'){
-    } else if(msg.content === '!gif'){
     }
 }
