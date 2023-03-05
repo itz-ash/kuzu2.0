@@ -1,16 +1,9 @@
-require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+require('dotenv').config();
 
-const { Client, IntentsBitField } = require('discord.js');
-const client = new Client({
-  intents: [
-    IntentsBitField.Flags.Guilds,
-    IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.MessageContent,
-  ],
-});
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -22,8 +15,8 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-client.on(Ready, () => {
-	console.log(`logged in as ${client.user.name}`);
+client.once(Events.ClientReady, () => {
+	console.log('Ready!');
 });
 
 client.on(Events.InteractionCreate, async interaction => {
